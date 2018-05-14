@@ -3,7 +3,7 @@
      include('route.php');
      include('functions.php');
      $config = include ('config.php') ;
-     bootstrap();
+     $pdo = bootstrap();
      include ('header.phtml') ;
 
      try {

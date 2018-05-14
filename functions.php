@@ -86,17 +86,11 @@ function registerUser($params)
     $data .= json_encode(['email' => $params['email'], 'password' => $params['password']]) . PHP_EOL;
     file_put_contents('storage.json', $data);
 }
-
 function getUserByEmail($email)
-{
-    foreach (getUsers() as $user) {
-        if ($email === $user->email) {
-            return $user;
-        }
-    }
-
-    return false;
-}
+        global $pdo;
+        $sql = " SELECT * FROM `user` WHERE email = '{$email}'";
+        $user = $pdo->query($sql)->fetch();
+        return $user;
 
 function login($email, $password)
 {
@@ -135,16 +129,25 @@ function bootstrap()
     session_start();
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
+    return connectToMySql();
 }
-
+function connectToMysql(){
+    $dsn = 'mysql:host=localhost;dbname=skolica';
+    $username = 'root';
+    $password = '';
+    $pdo = new PDO($dsn, $username, $password);
+    return $pdo;
+}
 /*
- * Get users from file storage
+ * Get users from file storag
+ * e
  * Return array
  */
 function getUsers()
 {
-    $users = file_get_contents('storage.json');
-    return json_decode($users);
+    global $pdo;
+    $sql = " SELECT * FROM `user` ";
+    return $pdo->query($sql)->fetchAll();
 }
 
 function isLoggedIn()
@@ -219,22 +222,30 @@ function getArticles()
     return json_decode($articles);
 }
 
-function saveArticle($params)
+function articleUpdate($params)
 {
-//    $articleData = [
-//        'title' => $params['title']
-//    ];
-
     $articles = [];
     foreach (getArticles() as $article) {
         if ($article->title === trim($params['title'])) {
             $articles[] = $params;
         } else {
-            $articles[] = $params;
+            $articles[] = $article;
         }
 
     }
     return file_put_contents('article.json', json_encode($articles));
+}
+function userUpdate($params)
+{
+    $users = [];
+    foreach (getUsers() as $user) {
+        if ($user->email === trim($params['email'])) {
+            $users[] = $params;
+        }else {
+            $users[] = $user;
+        }
+    }
+    return file_put_contents('storage.json', json_encode($users));
 }
 
 function saveCategoryForm($params)

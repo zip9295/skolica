@@ -59,7 +59,7 @@
                     include('userForm.phtml');
                     break;
                 case 'userUpdate':
-
+                    userUpdate($_POST);
 
                     break;
                 case 'userUpdateForm':
@@ -94,7 +94,7 @@
                     include 'articleForm.phtml';
                     break;
                 case 'articleUpdate' :
-                        saveArticle($_POST);
+                        articleUpdate($_POST);
                     break;
                 case 'articleList' :
                     $articles = array();
@@ -120,6 +120,9 @@
                         $categories = getCategory();
                         include 'categoryCreate.phtml';
                     }
+                    break;
+                case 'categoryUpdate' :
+                    categoryUpdate($_POST);
                     break;
                 default:
                     echo "default";
