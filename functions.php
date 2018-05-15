@@ -87,11 +87,13 @@ function registerUser($params)
     file_put_contents('storage.json', $data);
 }
 function getUserByEmail($email)
-        global $pdo;
-        $sql = " SELECT * FROM `user` WHERE email = '{$email}'";
-        $user = $pdo->query($sql)->fetch();
-        return $user;
-
+{
+    global $pdo;
+    $sql = " SELECT * FROM `user` WHERE email = '{$email}'";
+    $statement = $pdo->query($sql);
+    $user->fetch();
+    return $user;
+}
 function login($email, $password)
 {
     $user = getUserByEmail($email);
@@ -218,22 +220,21 @@ function getArticleByTitle($title)
 
 function getArticles()
 {
-    $articles = file_get_contents('article.json');
-    return json_decode($articles);
+    global $pdo;
+    $sql = " SELECT * FROM `article` ";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+
 }
 
 function articleUpdate($params)
 {
-    $articles = [];
-    foreach (getArticles() as $article) {
-        if ($article->title === trim($params['title'])) {
-            $articles[] = $params;
-        } else {
-            $articles[] = $article;
-        }
+    global $pdo;
+    $sql = "UPDATE `article` SET `title`='{$params['title']}', `description`='{$params['description']}', `body`='{$params['body']}',`image`='' WHERE `articleId`='{$params['articleId']}'";
+    return $pdo->query($sql)->execute();
+
+
 
     }
-    return file_put_contents('article.json', json_encode($articles));
 }
 function userUpdate($params)
 {
