@@ -76,9 +76,8 @@ function resolveRoute($config)
             include('userForm.phtml');
             break;
         case 'articleUpdateForm' :
-            $categories= array();
             $categories= getCategory();
-            $article = getArticleByTitle($_GET['title']);
+            $article = getArticleWithCategoryName($_GET['articleId']);
             include 'articleForm.phtml';
             break;
         case 'userUpdate':
@@ -95,6 +94,7 @@ function resolveRoute($config)
                 $message = 'Uspesno ste se ulogovali';
             }
             $emailFilter = null;
+            $users = [];
             if (isset($_GET['emailFilter'])) {
                 array_push($users, getUserByEmail($_GET['emailFilter']));
             } else {
@@ -103,7 +103,7 @@ function resolveRoute($config)
             include 'userList.phtml';
             break;
         case 'articleList' :
-            $articles = array();
+            $article= [];
             $articleFilter = null;
             if (isset($_GET['articleFilter'])) {
                 array_push($article, getArticleByTitle($_GET['articleFilter']));

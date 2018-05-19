@@ -17,9 +17,9 @@
         </tr>
         <?php foreach($articles as $article): ?>
             <tr>
-                <td><a href="index.php?route=articleUpdateForm&title=<?=$article -> articleId?>"><?=$article -> title ?></a></td>
+                <td><a href="index.php?route=articleUpdateForm&articleId=<?=$article -> articleId?>"><?=$article -> title ?></a></td>
                 <td><?=$article -> description ?></td>
-                <td><?=$article -> user ?></td>
+                <td><?=$article -> username ?></td>
             </tr>
         <?php endforeach; ?>
 

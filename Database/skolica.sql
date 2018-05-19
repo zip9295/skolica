@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2018 at 04:13 AM
+-- Generation Time: May 19, 2018 at 08:03 PM
 -- Server version: 5.7.17
 -- PHP Version: 5.6.30
 
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `skolica`
 --
-CREATE DATABASE IF NOT EXISTS `skolica` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `skolica`;
 
 -- --------------------------------------------------------
 
@@ -46,7 +44,7 @@ CREATE TABLE `article` (
 
 INSERT INTO `article` (`articleId`, `title`, `description`, `body`, `image`, `userId`, `categoryId`) VALUES
 (1, 'Bitcoin je otrov za pacove, ne stvara ništa', 'Najpoznatiji svetski finansijski mag, američki milijarder Voren Bafet, ponovo je danas osuo paljbu po Bitcoin i drugim kriptovalutama.', 'Bafet je bez ustručavanja famoznu kriptovalutu nazvao \"otrovom za pacove\", koji \"ne stvara ništa\" već samo dodatne kupce koji bi da se uključe u prodaju.\r\n\r\nUporedivši tražnju za Bitcoin-om sa ludilom za \"lalama\" u 17. veku u Holandiji (što je začetak berze kao institucije na kojoj se proslavio Bafet), predsednik i izvršni direktor investicionog fonda „Berkšir Hatavej“ kaže da je mistika, koja je obavila ovu kriptovalutu \"krivac\" za rast njene vrednosti, prenosi Rojters.', 'hdhdhdh.jpg', 1, 1),
-(2, 'Najbolja Windows 10 PC opcija stigla na Android!', 'Windows Timeline, jedna od najboljih Windows 10 opcija stiže na Android i iOS pametne uređaje.', 'Microsoft Build 2018, godišnje konferencija za programere i IT stručnjake, je počela, a nama je pažnju privukla velika najava kompanije Microsoft da će jednu od ključnih PC Windows 10 karakteristika doneti na mobilne Android i iOS uređaje - Timeline.\r\n\r\nTimeline: na Windows 10 računarima, omogućava korisnicima da se vrate kroz vreme i pronađu svoje materijale, na kojima su radili ranije tokom dana, prošle nedelje ili čak nekoliko nedelja unazad.', 'jnn.jpg', 2, 2);
+(2, 'Najbolja Windows 10 PC opcija stigla na Android!!!!!!!', 'Windows Timeline, jedna od najboljih Windows 10 opcija stiï¿½e na Android i iOS pametne ure?aje.', 'Microsoft Build 2018, godiï¿½nje konferencija za programere i IT stru?njake, je po?ela, a nama je paï¿½nju privukla velika najava kompanije Microsoft da ?e jednu od klju?nih PC Windows 10 karakteristika doneti na mobilne Android i iOS ure?aje - Timeline.\r\n\r\nTimeline: na Windows 10 ra?unarima, omogu?ava korisnicima da se vrate kroz vreme i prona?u svoje materijale, na kojima su radili ranije tokom dana, proï¿½le nedelje ili ?ak nekoliko nedelja unazad.', 'jnn.jpg', 2, 2);
 
 -- --------------------------------------------------------
 

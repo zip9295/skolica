@@ -160,10 +160,16 @@ function articleUpdate($params)
     $sql = "UPDATE `article` SET 
         `title`='{$params['title']}',
         `description`='{$params['description']}', 
-        `body`='{$params['body']}', 
-    WHERE `articleId`='{$params['articleId']}'";
-    return $pdo->query($sql)->execute();
+        `body`='{$params['body']}' 
+    WHERE `articleId`='{$_GET['articleId']}'";
+
+    if (!$pdo->exec($sql)) {
+        var_dump($pdo->errorInfo()[2]);
+        die();
+        throw new \Exception($pdo->errorInfo()[2]);
+    }
 }
+
 function getUsers()
 {
     global $pdo;
@@ -174,13 +180,13 @@ function getUserByEmail($email)
 {
     global $pdo;
     $sql = " SELECT * FROM `user` WHERE email = '{$email}'";
-    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+    return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
 function getUserById($userId)
 {
     global $pdo;
     $sql= "SELECT * FROM `user` WHERE `userId` = '{$userId}'";
-    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+    return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
 function getArticles()
 {
@@ -192,18 +198,24 @@ function getArticleByTitle($title)
 {
     global $pdo;
     $sql = " SELECT * FROM `article` WHERE title = '{$title}'";
-    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+    return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
 function getArticleById ($articleId)
 {
     global $pdo;
     $sql= "SELECT * FROM `article` WHERE `articleId` = '{$articleId}'";
-    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+    return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
 function getCategory()
 {
     global $pdo;
     $sql = " SELECT * FROM `category` ";
     return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+}
+function getArticleWithCategoryName($articleId)
+{
+    global $pdo;
+    $sql = "SELECT a.*, c.name as categoryName FROM `article` a JOIN `category` c USING(`categoryId`) where categoryId='{$articleId}'";
+    return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
 ?>
