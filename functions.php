@@ -1,4 +1,45 @@
 <?php
+function bootstrap()
+{
+    define('APP_PATH', __DIR__);
+    session_start();
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    return connectToMySql();
+}
+function connectToMysql()
+{
+    $dsn = 'mysql:host=localhost;dbname=skolica';
+    $username = 'root';
+    $password = '';
+    $pdo = new PDO($dsn, $username, $password);
+    return $pdo;
+}
+function redirect($baseUrl, $route = '', $statusCode = 302)
+{
+    header('location:' . $baseUrl . $route, $statusCode);
+}
+function createPasswordHash($password)
+{
+    return md5($password);
+}
+function validateLoginForm($params)
+{
+    if (!is_array($params)) {
+        throw new Exception('Given param is not an array');
+    }
+    if (isset($params['email']) and isset($params['password'])) {
+        if ((strlen($params['email']) > 6 and strlen($params['email'] <= 20) and strstr($params['email'], '@', true)) and
+            (strlen($params['password']) > 6 and strlen($params['password']) <= 14)
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
 function validateRegisterForm($params)
 {
     if (!is_array($params)) {
@@ -17,7 +58,6 @@ function validateRegisterForm($params)
         return false;
     }
 }
-
 function validateUserForm($params)
 {
     if (!is_array($params)) {
@@ -31,68 +71,23 @@ function validateUserForm($params)
             (strlen($params['firstName']) > 2 and strlen($params['firstName']) < 32) and
             (strlen($params['lastName']) > 2 and strlen($params['lastName']) < 32) and
             (strlen($params['username']) > 2 and strlen($params['username']) < 32)
-            // (strlen($params['email']) > 6 and strlen($params['email'] <= 20) and strstr($params['email'], '@', true)) and
-            // (strlen($params['password']) > 6 and strlen($params['password']) <= 14) and
-            // ($params['password-2'] === $params['password']) and
-            // (strlen($params['firstName']) > 2 and strlen($params['firstName']) < 32 and preg_match("/[^a-zA-Z\_-]/i", $params['firstName'])) and
-            // (strlen($params['lastName']) > 2 and strlen($params['lastName']) < 32 and preg_match("/[^a-zA-Z\_-]/i", $params['lastName'])) and
-            // (strlen($params['username']) > 2 and strlen($params['username']) < 32 and preg_match("/[^a-zA-Z0-9\_-]/i", $params['username']))
         ) {
             return true;
         } else {
-            echo "nije ok";
+            echo "nisu ispunjeni svi uslovi";
             return false;
         }
     } else {
         return false;
     }
 }
-
-function saveUser($params)
+function validateArticleForm()
 {
-    $fileName = saveImage();
-    $userData = [
-        'email' => $params['email'],
-        'password' => createPasswordHash($params['password']),
-        'firstName' => $params['firstName'],
-        'lastName' => $params['lastName'],
-        'username' => $params['username'],
-        'image' => $fileName,
-        'status' => $params['status']
-    ];
-    $tmp = file_get_contents('storage.json');
-    if (strlen($tmp) === 0) {
-        $data = [$userData];
-    } else {
-        $data = json_decode($tmp);
-        $data[] = $userData;
+    if (isset($_POST['body']) and strlen($_POST['body']) < 1 or isset($_POST['category']) and strlen($_POST['category']) < 1 or isset($_POST['user']) and strlen($_POST['user']) < 1) {
+        return false;
     }
-    return file_put_contents('storage.json', json_encode($data));
-}
+    return true;
 
-function saveImage()
-{
-    $fileName = APP_PATH . '/images/' . $_FILES['image']['name'];
-    if (!move_uploaded_file($_FILES['image']['tmp_name'], $fileName)) {
-        echo "Nismo snimili sliku";
-        die();
-    }
-    return 'images/' . $_FILES['image']['name'];
-}
-
-function registerUser($params)
-{
-    $data = file_get_contents('storage.json');
-    $data .= json_encode(['email' => $params['email'], 'password' => $params['password']]) . PHP_EOL;
-    file_put_contents('storage.json', $data);
-}
-function getUserByEmail($email)
-{
-    global $pdo;
-    $sql = " SELECT * FROM `user` WHERE email = '{$email}'";
-    $statement = $pdo->query($sql);
-    $user->fetch();
-    return $user;
 }
 function login($email, $password)
 {
@@ -106,168 +101,109 @@ function login($email, $password)
     }
     return false;
 }
-
-function validateLoginForm($params)
-{
-    if (!is_array($params)) {
-        throw new Exception('Given param is not an array');
-    }
-    if (isset($params['email']) and isset($params['password'])) {
-        if ((strlen($params['email']) > 6 and strlen($params['email'] <= 20) and strstr($params['email'], '@', true)) and
-            (strlen($params['password']) > 6 and strlen($params['password']) <= 14)
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
-
-function bootstrap()
-{
-    define('APP_PATH', __DIR__);
-    session_start();
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    return connectToMySql();
-}
-function connectToMysql(){
-    $dsn = 'mysql:host=localhost;dbname=skolica';
-    $username = 'root';
-    $password = '';
-    $pdo = new PDO($dsn, $username, $password);
-    return $pdo;
-}
-/*
- * Get users from file storag
- * e
- * Return array
- */
-function getUsers()
-{
-    global $pdo;
-    $sql = " SELECT * FROM `user` ";
-    return $pdo->query($sql)->fetchAll();
-}
-
 function isLoggedIn()
 {
-    if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true) {
+    if (isset($_SESSION['isLoggedIn']) and $_SESSION['isLoggedIn'] === true) {
         return true;
     }
 
     return false;
 }
-
-function redirect($baseUrl, $route = '', $statusCode = 302)
-{
-    header('location:' . $baseUrl . $route, $statusCode);
-}
-
 function logOut()
 {
     unset($_SESSION);
     session_destroy();
 }
-
-function createPasswordHash($password)
+function saveUser($params)
 {
-    return md5($password);
+    global $pdo;
+    $password = createPasswordHash($params['password']);
+    $sql = "INSERT INTO `user` (userId, firstName,lastName, email, password, username, age, status) VALUES (null, '{$params['firstName']}', '{$params['lastName']}', '{$params['email']}', '{$password}', '{$params['username']}', '{$params['age']}', '{$params['status']}')";
+    return $pdo->query($sql)->execute();
 }
-
-function validateArticleForm()
-{
-    if (isset($_POST['body']) && strlen($_POST['body']) < 1 || isset($_POST['category']) && strlen($_POST['category']) < 1 || isset($_POST['user']) && strlen($_POST['user']) < 1) {
-        return false;
-    }
-    return true;
-
-}
-
 function saveArticleForm($params)
 {
-    //$fileName = saveImage();
-    $articleData = [
-        'title' => $params['title'],
-        'description' => $params['description'],
-        'body' => $params['body'],
-        'category' => $params['category'],
-        'user' => $params['user'],
-        //'image' => $fileName,
-    ];
-    $tmp = file_get_contents('article.json');
-    if (strlen($tmp) === 0) {
-        $data = [$articleData];
-    } else {
-        $data = json_decode($tmp);
-        $data[] = $articleData;
-    }
-    return file_put_contents('article.json', json_encode($data));
+    global $pdo;
+    $sql = "INSERT INTO `article` (`articleId`, `title`, `description`, `body`, `categoryId`, `userId`) 
+                VALUES (NULL, '{$params['title']}', '{$params['description']}', '{$params['body']}}', '{}', '{}')";
+    return $pdo->query($sql)->execute();
 }
-
-function getArticleByTitle($title)
+function saveCategoryForm($params)
 {
-    foreach (getArticles() as $article) {
-        if ($title === $article->title) {
-            return $article;
-        }
-    }
-
-    return false;
+    global $pdo;
+    $sql = "INSERT INTO `category` (`categoryId`, `name`, `parentId`) VALUES (NULL, '{$params['categoryName']}', '{}')";
+    return $pdo->query($sql)->execute();
 }
-
+function userUpdate($params)
+{
+    global $pdo;
+    $user = getuserById($params['userId']);
+    if ($params['password'] === ''){
+        $password = $user['password'];
+    }else {
+        $password = createPasswordHash($params['password']);
+    }
+    $sql = "UPDATE `user` SET 
+        `email` = '{$params['email']}',
+        `password`= '{$password}',
+        `firstName`= '{$params['firstName']}',
+        `lastName`= '{$params['lastName']}',
+        `username`= '{$params['username']}',
+        `status`= '{$params['status']}',
+        `age`= '{$params['age']}',
+    WHERE `userId`= {$params['userId']}";
+    return $pdo->query($sql)->execute();
+}
+function articleUpdate($params)
+{
+    global $pdo;
+    $sql = "UPDATE `article` SET 
+        `title`='{$params['title']}',
+        `description`='{$params['description']}', 
+        `body`='{$params['body']}', 
+    WHERE `articleId`='{$params['articleId']}'";
+    return $pdo->query($sql)->execute();
+}
+function getUsers()
+{
+    global $pdo;
+    $sql = " SELECT * FROM `user` ";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+}
+function getUserByEmail($email)
+{
+    global $pdo;
+    $sql = " SELECT * FROM `user` WHERE email = '{$email}'";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+}
+function getUserById($userId)
+{
+    global $pdo;
+    $sql= "SELECT * FROM `user` WHERE `userId` = '{$userId}'";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+}
 function getArticles()
 {
     global $pdo;
     $sql = " SELECT * FROM `article` ";
     return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
-
 }
-
-function articleUpdate($params)
+function getArticleByTitle($title)
 {
     global $pdo;
-    $sql = "UPDATE `article` SET `title`='{$params['title']}', `description`='{$params['description']}', `body`='{$params['body']}',`image`='' WHERE `articleId`='{$params['articleId']}'";
-    return $pdo->query($sql)->execute();
-
-
-
-    }
+    $sql = " SELECT * FROM `article` WHERE title = '{$title}'";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
 }
-function userUpdate($params)
+function getArticleById ($articleId)
 {
-    $users = [];
-    foreach (getUsers() as $user) {
-        if ($user->email === trim($params['email'])) {
-            $users[] = $params;
-        }else {
-            $users[] = $user;
-        }
-    }
-    return file_put_contents('storage.json', json_encode($users));
+    global $pdo;
+    $sql= "SELECT * FROM `article` WHERE `articleId` = '{$articleId}'";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
 }
-
-function saveCategoryForm($params)
-{
-    $userData = [
-        'category' => $params['category'],
-    ];
-    $tmp = file_get_contents('category.json');
-    if (strlen($tmp) === 0) {
-        $data = [$userData];
-    } else {
-        $data = json_decode($tmp);
-        $data[] = $userData;
-    }
-    return file_put_contents('category.json', json_encode($data));
-}
-
 function getCategory()
 {
-    $categories = file_get_contents('category.json');
-    return json_decode($categories);
+    global $pdo;
+    $sql = " SELECT * FROM `category` ";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
 }
-
 ?>

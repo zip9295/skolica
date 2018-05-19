@@ -13,7 +13,7 @@
   </head>
   <body>
     <div class="container resizedForm">
-        <form action="index.php?route=categorySave" method="post">
+        <form action="index.php?route=categoryCreate" method="post">
             <div class="form-group">
                 <h1>Add Category</h1>
                 <input type="text" name="category">
@@ -27,7 +27,7 @@
                 </tr>
                 <?php foreach($categories as $category): ?>
                     <tr>
-                        <td><?=$category -> category ?></td>
+                        <td><?=$category -> name ?></td>
                     </tr>
                 <?php endforeach; ?>
 

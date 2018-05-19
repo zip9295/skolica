@@ -30,7 +30,7 @@
                     <label for="category">Category</label>
                     <select class="form-control" name="category">
                         <?php foreach($categories as $category): ?>
-                                <option <?php if (isset($article->title) && $article->category === $category->category): echo 'selected="selected"'; endif?>> <?=$category -> category ?></option>
+                                <option <?php if (isset($article->title) && $article->category === $category->name): echo 'selected="selected"'; endif?>> <?=$category -> name ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
