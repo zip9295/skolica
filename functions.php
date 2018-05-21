@@ -23,6 +23,29 @@ function createPasswordHash($password)
 {
     return md5($password);
 }
+function generateUser()
+{
+       $firstNames =['Petar', 'Marko', 'Lazar','Igor','Stefan','Nikola','Marija','Ana','Kristina'.'Nina','Aleksandra'];
+       $lastNames=['Nikolic','Markovic','Jankovic','Ivanovic','Milosavljevic','Ivanovic','Milutinovic','Obradovic', 'Milojevic','Cocic','Tomic'];
+       $emails=['n@example.com','s@example.com', 'i@example.com', 'u@example.com', 'b@example.com','qq@example.com', 'qwe@example.com', 'qwer@example.com', 'qwerty@example.com'];
+       $usernames=['q','qw','qwe','qwer','qwerty','z','zx','zxc','zxcv','zxcvb','trewq','bvcxz'];
+       return [
+           'firstName'=>$firstNames[rand(0, count($firstNames)-1)],
+           'lastName'=>$lastNames[rand(0, count($lastNames)-1)],
+           'email'=>$emails[rand(0, count($emails)-1)],
+           'status'=>rand(0,1),
+           'age'=>rand(7,77),
+           'password'=>"",
+           'username'=>$usernames[rand(0, count($usernames)-1)]
+       ];
+}
+function populateUsers($count) {
+    for ($i=0;$i<$count;$i++){
+        $user= generateUser();
+        saveUser($user);
+    }
+    echo "Generisano ". $count. " korisnika";
+}
 function validateLoginForm($params)
 {
     if (!is_array($params)) {
@@ -119,7 +142,11 @@ function saveUser($params)
     global $pdo;
     $password = createPasswordHash($params['password']);
     $sql = "INSERT INTO `user` (userId, firstName,lastName, email, password, username, age, status) VALUES (null, '{$params['firstName']}', '{$params['lastName']}', '{$params['email']}', '{$password}', '{$params['username']}', '{$params['age']}', '{$params['status']}')";
-    return $pdo->query($sql)->execute();
+    if (!$pdo->exec($sql)) {
+        var_dump($pdo->errorInfo()[2]);
+        die();
+        throw new \Exception($pdo->errorInfo()[2]);
+    }
 }
 function saveArticleForm($params)
 {

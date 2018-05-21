@@ -7,8 +7,7 @@ function resolveRoute($config)
     } else {
         $route = $_GET['route'];
     }
-    switch ($route)
-    {
+    switch ($route) {
         case 'loginForm':
             include('loginForm.phtml');
             break;
@@ -33,7 +32,7 @@ function resolveRoute($config)
             include('userForm.phtml');
             break;
         case 'articleCreateForm' :
-            $categories= getCategory();
+            $categories = getCategory();
             include('articleForm.phtml');
             break;
         case 'categoryCreateForm' :
@@ -76,7 +75,7 @@ function resolveRoute($config)
             include('userForm.phtml');
             break;
         case 'articleUpdateForm' :
-            $categories= getCategory();
+            $categories = getCategory();
             $article = getArticleWithCategoryName($_GET['articleId']);
             include 'articleForm.phtml';
             break;
@@ -103,7 +102,7 @@ function resolveRoute($config)
             include 'userList.phtml';
             break;
         case 'articleList' :
-            $article= [];
+            $article = [];
             $articleFilter = null;
             if (isset($_GET['articleFilter'])) {
                 array_push($article, getArticleByTitle($_GET['articleFilter']));
@@ -112,6 +111,12 @@ function resolveRoute($config)
             }
             include 'articleList.phtml';
             break;
+        case 'populateUsersForm':
+            include 'generateUsers.phtml';
+            break;
+        case 'populateUsers':
+            populateUsers($_POST['count']);
+            break;
         default:
             echo "default";
             break;
@@ -119,8 +124,11 @@ function resolveRoute($config)
 }
 
 
-
-
+//$page= $_GET($page)
+//$perPage=20;
+//$offset=($page-1)=$perPage
+//LIMIT OFFSET, LIMIT
+//Route=userList&page=1
 
 
 
