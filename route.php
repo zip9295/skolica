@@ -72,7 +72,7 @@ function resolveRoute($config)
             }
             break;
         case 'userUpdateForm':
-            $user = getUserByEmail($_GET['email']);
+            $user = getUserById($_GET['userId']);
             include('userForm.phtml');
             break;
         case 'articleUpdateForm' :

@@ -137,7 +137,7 @@ function saveCategoryForm($params)
 function userUpdate($params)
 {
     global $pdo;
-    $user = getuserById($params['userId']);
+    $user = getuserById($_GET['userId']);
     if ($params['password'] === ''){
         $password = $user['password'];
     }else {
@@ -150,9 +150,13 @@ function userUpdate($params)
         `lastName`= '{$params['lastName']}',
         `username`= '{$params['username']}',
         `status`= '{$params['status']}',
-        `age`= '{$params['age']}',
-    WHERE `userId`= {$params['userId']}";
-    return $pdo->query($sql)->execute();
+        `age`= '{$params['age']}'
+    WHERE `userId`='{$_GET['userId']}'";
+    if (!$pdo->exec($sql)) {
+        var_dump($pdo->errorInfo()[2]);
+        die();
+        throw new \Exception($pdo->errorInfo()[2]);
+    }
 }
 function articleUpdate($params)
 {
