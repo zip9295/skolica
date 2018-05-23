@@ -13,26 +13,13 @@
   </head>
   <body>
     <div class="container resizedForm">
-        <form action="index.php?route=categoryCreate" method="post">
+        <form action="index.php?route=<?php if (!isset($category->name)): ?>categoryCreateForm<?php else: ?>categoryUpdateForm&categoryId=<?=$category->categoryId?><?php endif; ?> " method="post">
             <div class="form-group">
-                <h1>Add Category</h1>
-                <input type="text" name="categoryName">
+                <h1><?php if (!isset($category->name)):?>Add Category<?php else: ?>Edit Category<?php endif;?></h1>
+                <input type="text" name="categoryName" value="<?php if (isset($category->name)){echo $category->name;}?>">
                 <input type="submit" name="submit" value="Add">
             </div>
         </form>
-        <div class="container">
-            <table class="table">
-                <tr>
-                    <th>Category List</th>
-                </tr>
-                <?php foreach($categories as $category): ?>
-                    <tr>
-                        <td><a href="index.php?route=categoryUpdateForm&categoryName=<?=$category -> name?>"><?=$category -> name ?></a></td>
-                    </tr>
-                <?php endforeach; ?>
-
-
-            </table>
     </div>
 
 

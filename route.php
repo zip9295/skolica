@@ -36,7 +36,6 @@ function resolveRoute($config)
             include('articleForm.phtml');
             break;
         case 'categoryCreateForm' :
-            $categories = getCategory();
             include 'categoryCreate.phtml';
             break;
         case 'userCreate':
@@ -75,6 +74,7 @@ function resolveRoute($config)
             include 'articleForm.phtml';
             break;
         case 'categoryUpdateForm' :
+            $category= getCategoryByName($_GET['categoryName']);
             include 'categoryCreate.phtml';
             break;
         case 'userUpdate':
@@ -107,6 +107,10 @@ function resolveRoute($config)
                 $articles= getArticlesWithUsername();
             }
             include 'articleList.phtml';
+            break;
+        case 'categoryList' :
+            $categories = getCategory();
+            include 'categoryList.phtml';
             break;
         case 'populateUsersForm':
             include 'generateUsers.phtml';

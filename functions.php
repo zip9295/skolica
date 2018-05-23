@@ -226,7 +226,7 @@ function getUsers()
 function getUserByEmail($email)
 {
     global $pdo;
-    $sql = " SELECT * FROM `user` WHERE email = '{$email}'";
+    $sql = " SELECT * FROM `user` WHERE `email` = '{$email}'";
     return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
 function getUserById($userId)
@@ -258,6 +258,12 @@ function getCategory()
     global $pdo;
     $sql = " SELECT * FROM `category` ";
     return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+}
+function getCategoryByName()
+{
+    global $pdo;
+    $sql = "SELECT * FROM `category` WHERE `name` = '{$_GET['categoryName']}'";
+    return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
 function getArticleWithCategoryName($articleId)
 {
