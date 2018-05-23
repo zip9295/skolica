@@ -158,8 +158,12 @@ function saveArticleForm($params)
 function saveCategoryForm($params)
 {
     global $pdo;
-    $sql = "INSERT INTO `category` (`categoryId`, `name`, `parentId`) VALUES (NULL, '{$params['categoryName']}', '{}')";
-    return $pdo->query($sql)->execute();
+    $sql = "INSERT INTO `category` (`categoryId`, `name`, `parentId`) VALUES (NULL, '{$params['categoryName']}',NULL)";
+    if (!$pdo->exec($sql)){
+        var_dump($pdo->errorInfo()[2]);
+        die();
+        throw new \Exception($pdo->errorInfo()[2]);
+    }
 }
 function userUpdate($params)
 {
@@ -194,6 +198,18 @@ function articleUpdate($params)
         `body`='{$params['body']}' 
     WHERE `articleId`='{$_GET['articleId']}'";
 
+    if (!$pdo->exec($sql)) {
+        var_dump($pdo->errorInfo()[2]);
+        die();
+        throw new \Exception($pdo->errorInfo()[2]);
+    }
+}
+function categoryUpdate($params)
+{
+    global $pdo;
+    $sql = "UPDATE `category` SET
+    `name`=`{$params['name']}`
+    WHERE `name`='{$_GET['categoryId']}'";
     if (!$pdo->exec($sql)) {
         var_dump($pdo->errorInfo()[2]);
         die();
@@ -249,4 +265,11 @@ function getArticleWithCategoryName($articleId)
     $sql = "SELECT a.*, c.name as categoryName FROM `article` a JOIN `category` c USING(`categoryId`) where categoryId='{$articleId}'";
     return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
+function getArticlesWithUsername()
+{
+    global $pdo;
+    $sql = "SELECT a.*, c.username FROM `article`a JOIN `user`c USING (`userId`)";
+    return $pdo->query($sql)->fetchALL(PDO::FETCH_OBJ);
+}
+
 ?>

@@ -39,7 +39,7 @@
                     <input type="text" name="user" class="form-control" placeholder="Enter username here" value="<?php if(isset($article->user)): echo $article->user; endif;?>">
                 </div>
                 <div class="form-group text-center">
-                    <input type="submit" name="submit" value="<?php if (isset($article->title)): ?>Update Article<?php else: ?>Submit Article<?php endif; ?>">
+                    <input type="submit" class="btn btn-primary" name="submit" value="<?php if (isset($article->title)): ?>Update Article<?php else: ?>Submit Article<?php endif; ?>">
                 </div>
 
             </form>

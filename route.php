@@ -61,14 +61,9 @@ function resolveRoute($config)
             }
             break;
         case 'categoryCreate' :
-            if (!saveCategoryForm($_POST)) {
-                $message = 'Doslo je do greske prilikom snimanja';
-            } else {
-                echo "Kategorija je uspesno snimljena u bazu";
-                $categories = array();
+                saveCategoryForm($_POST);
                 $categories = getCategory();
                 include 'categoryCreate.phtml';
-            }
             break;
         case 'userUpdateForm':
             $user = getUserById($_GET['userId']);
@@ -78,6 +73,9 @@ function resolveRoute($config)
             $categories = getCategory();
             $article = getArticleWithCategoryName($_GET['articleId']);
             include 'articleForm.phtml';
+            break;
+        case 'categoryUpdateForm' :
+            include 'categoryCreate.phtml';
             break;
         case 'userUpdate':
             userUpdate($_POST);
@@ -102,12 +100,11 @@ function resolveRoute($config)
             include 'userList.phtml';
             break;
         case 'articleList' :
-            $article = [];
             $articleFilter = null;
             if (isset($_GET['articleFilter'])) {
                 array_push($article, getArticleByTitle($_GET['articleFilter']));
             } else {
-                $articles = getArticles();
+                $articles= getArticlesWithUsername();
             }
             include 'articleList.phtml';
             break;
