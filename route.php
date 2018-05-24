@@ -95,7 +95,10 @@ function resolveRoute($config)
             if (isset($_GET['emailFilter'])) {
                 array_push($users, getUserByEmail($_GET['emailFilter']));
             } else {
-                $users = getUsersWithLimit($_GET['page']);
+                $page = $_GET['page'];
+                $perPage = 20;
+                $offset= ($page-1)*($perPage);
+                $users = getUsers(['offset'=>$offset, 'limit'=>$perPage]);
             }
             include 'userList.phtml';
             break;
@@ -129,51 +132,4 @@ function resolveRoute($config)
             break;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>

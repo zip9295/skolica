@@ -244,12 +244,15 @@ function categoryUpdate($params)
         throw new \Exception($pdo->errorInfo()[2]);
     }
 }
-
-function getUsers()
+function getUsers($params = null)
 {
     global $pdo;
-    $sql = " SELECT * FROM `user` ";
-    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+    $sql= "SELECT * FROM `user` ";
+    if (isset($params['offset'])) {
+        $sql .=" LIMIT {$params['offset']}, {$params['limit']}";
+        return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+
+    }
 }
 function getUserByEmail($email)
 {
@@ -261,7 +264,13 @@ function getUserById($userId)
 {
     global $pdo;
     $sql= "SELECT * FROM `user` WHERE `userId` = '{$userId}'";
-    return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
+    $statment= $pdo->query($sql);
+    if (!$statment){
+        var_dump($pdo->errorInfo()[2]);
+        die();
+        throw new \Exception($pdo->errorInfo()[2]);
+    }
+    $statment->fetch(PDO::FETCH_OBJ);
 }
 function getArticles()
 {
@@ -302,13 +311,13 @@ function getArticleWithCategoryName($articleId)
 function getArticlesWithUsername()
 {
     global $pdo;
-    $sql = "SELECT a.*, c.username FROM `article`a JOIN `user`c USING (`userId`)";
-    return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
+    $sql = "SELECT a.*, c.username FROM `article` a JOIN `user` c USING (`userId`)";
+    return $pdo->query($sql)->fetchALL(PDO::FETCH_OBJ);
 }
 function getUsersWithLimit ($page)
 {
     $perPage = 20;
-    $offset= $page-1;
+    $offset= ($page-1)*($perPage);
     global $pdo;
     $sql= "SELECT * FROM `user` LIMIT {$offset}, {$perPage} ";
     return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
@@ -316,7 +325,7 @@ function getUsersWithLimit ($page)
 function getCategoryesWithLimit ($page)
 {
     $perPage = 20;
-    $offset= $page-1;
+    $offset= ($page-1)*($perPage);
     global $pdo;
     $sql= "SELECT * FROM `category` LIMIT {$offset}, {$perPage} ";
     return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
@@ -324,10 +333,22 @@ function getCategoryesWithLimit ($page)
 function getArticlesWithLimit ($page)
 {
     $perPage = 20;
-    $offset= $page-1;
+    $offset= ($page-1)*($perPage);
     global $pdo;
-    $sql= "SELECT * FROM `article` LIMIT {$offset}, {$perPage} ";
+    $sql= "SELECT a.*,c.`username` FROM `article` a JOIN `user` c USING (`userId`) LIMIT {$offset}, {$perPage} ";
     return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+}
+//svi brojevi od 1-100
+//a) svaki parni broj treba da bude crven
+//b) svaki broj koji je deljiv sa 4 treba da bude zelen
+//c) svaki broj koji sadrzi 0 treba da bude zut
+
+FUNCTION sviBrojeviDoSto()
+{
+ for ($i=1;$i<100;$i++)
+ {
+     echo $i;
+ }
 }
 ?>
 
