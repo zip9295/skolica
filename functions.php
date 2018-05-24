@@ -46,6 +46,28 @@ function populateUsers($count) {
     }
     echo "Generisano ". $count. " korisnika";
 }
+function generateArticle()
+{
+    $names = ['test', 'test 1', 'test 2', 'test 3', 'test 4', 'test 5', 'test 6', 'test 7', 'test 8', 'test 9'];
+    $titles = ['test', 'test 1', 'test 2', 'test 3', 'test 4', 'test 5', 'test 6', 'test 7', 'test 8', 'test 9'];
+    $descriptions = ['test', 'test 1', 'test 2', 'test 3', 'test 4', 'test 5', 'test 6', 'test 7', 'test 8', 'test 9'];
+    $bodies = ['Lorem ipsum commodo maecenas morbi justo condimentum vel sapien enim varius mattis.', 'Lorem ipsum blandit iaculis curae lorem, scelerisque leo imperdiet felis orci, diam convallis orci blandit.','Lorem ipsum nisi in nisi.', 'Lorem ipsum donec lacus ullamcorper platea aenean risus tempus.', 'Lorem ipsum diam lacinia netus ligula egestas accumsan augue sagittis proin leo ultrices.', 'Lorem ipsum nulla pellentesque mattis dolor at curabitur vel cras.', 'Lorem ipsum venenatis erat viverra ullamcorper tempor mauris tristique commodo.', 'Lorem ipsum quisque ante hac cras fermentum donec sociosqu inceptos rutrum potenti tristique.', 'Lorem ipsum nulla vulputate massa.'];
+    return [
+            'name'=>$names[rand(0, count($names)-1)],
+            'title'=>$titles[rand(0, count($titles)-1)],
+            'description'=>$descriptions[rand(0, count($descriptions)-1)],
+            'body'=>$bodies[rand(0, count($bodies)-1)],
+    ];
+
+}
+function populateArticles($count)
+{
+    for ($i=0;$i<$count;$i++) {
+        $article= generateArticle();
+        saveArticleForm($article);
+}
+    echo "Generisano ". $count. " artikala";
+}
 function validateLoginForm($params)
 {
     if (!is_array($params)) {
@@ -150,10 +172,16 @@ function saveUser($params)
 }
 function saveArticleForm($params)
 {
+    $random1= rand(0,10);
+    $random2= rand(0,10);
     global $pdo;
     $sql = "INSERT INTO `article` (`articleId`, `title`, `description`, `body`, `categoryId`, `userId`) 
-                VALUES (NULL, '{$params['title']}', '{$params['description']}', '{$params['body']}}', '{}', '{}')";
-    return $pdo->query($sql)->execute();
+                VALUES (NULL, '{$params['title']}', '{$params['description']}', '{$params['body']}}', '{$random1}', '{$random2}')";
+    if (!$pdo->exec($sql)) {
+        var_dump($pdo->errorInfo()[2]);
+        die();
+        throw new \Exception($pdo->errorInfo()[2]);
+    }
 }
 function saveCategoryForm($params)
 {
@@ -253,7 +281,7 @@ function getArticleById ($articleId)
     $sql= "SELECT * FROM `article` WHERE `articleId` = '{$articleId}'";
     return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
-function getCategory()
+function getCategories()
 {
     global $pdo;
     $sql = " SELECT * FROM `category` ";
@@ -275,7 +303,33 @@ function getArticlesWithUsername()
 {
     global $pdo;
     $sql = "SELECT a.*, c.username FROM `article`a JOIN `user`c USING (`userId`)";
-    return $pdo->query($sql)->fetchALL(PDO::FETCH_OBJ);
+    return $pdo->query($sql)->fetch(PDO::FETCH_OBJ);
 }
-
+function getUsersWithLimit ($page)
+{
+    $perPage = 20;
+    $offset= $page-1;
+    global $pdo;
+    $sql= "SELECT * FROM `user` LIMIT {$offset}, {$perPage} ";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+}
+function getCategoryesWithLimit ($page)
+{
+    $perPage = 20;
+    $offset= $page-1;
+    global $pdo;
+    $sql= "SELECT * FROM `category` LIMIT {$offset}, {$perPage} ";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+}
+function getArticlesWithLimit ($page)
+{
+    $perPage = 20;
+    $offset= $page-1;
+    global $pdo;
+    $sql= "SELECT * FROM `article` LIMIT {$offset}, {$perPage} ";
+    return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
+}
 ?>
+
+
+

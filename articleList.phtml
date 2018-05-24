@@ -26,6 +26,8 @@
                 <td><?=$article -> username ?></td>
             </tr>
         <?php endforeach; ?>
+        <a class="btn btn-default" href="index.php?route=articleList&page=<?= ($_GET['page'])-1?>">Previous Page</a>
+        <a class="btn btn-default" href="index.php?route=articleList&page=<?= ($_GET['page'])+1?>">Next Page</a>
 
 
     </table>
