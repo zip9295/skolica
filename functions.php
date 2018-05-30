@@ -251,7 +251,8 @@ function getUsers($params = null)
     if (isset($params['offset'])) {
         $sql .=" LIMIT {$params['offset']}, {$params['limit']}";
         return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
-
+    }else {
+        return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
     }
 }
 function getUserByEmail($email)
@@ -338,17 +339,11 @@ function getArticlesWithLimit ($page)
     $sql= "SELECT a.*,c.`username` FROM `article` a JOIN `user` c USING (`userId`) LIMIT {$offset}, {$perPage} ";
     return $pdo->query($sql)->fetchAll(PDO::FETCH_OBJ);
 }
-//svi brojevi od 1-100
-//a) svaki parni broj treba da bude crven
-//b) svaki broj koji je deljiv sa 4 treba da bude zelen
-//c) svaki broj koji sadrzi 0 treba da bude zut
-
-FUNCTION sviBrojeviDoSto()
+function getUserCount ()
 {
- for ($i=1;$i<100;$i++)
- {
-     echo $i;
- }
+    global $pdo ;
+    $sql = "SELECT COUNT(*) AS usersCount FROM `user`";
+    return $pdo->query($sql)->fetch();
 }
 ?>
 

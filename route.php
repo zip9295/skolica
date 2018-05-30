@@ -95,10 +95,16 @@ function resolveRoute($config)
             if (isset($_GET['emailFilter'])) {
                 array_push($users, getUserByEmail($_GET['emailFilter']));
             } else {
-                $page = $_GET['page'];
+                if ($_GET['page'] <1 ) {
+                    $page=1;
+                }else{
+                    $page = $_GET['page'];
+                }
                 $perPage = 20;
-                $offset= ($page-1)*($perPage);
+                $offset= ($page-1) * $perPage;
                 $users = getUsers(['offset'=>$offset, 'limit'=>$perPage]);
+                $userCount = getUserCount();
+                $maxPages = ceil($userCount['usersCount']/$perPage);
             }
             include 'userList.phtml';
             break;

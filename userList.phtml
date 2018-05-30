@@ -29,9 +29,13 @@
                 <td><img src="<?=$user -> image ?>" alt=""></td>
             </tr>
         <?php endforeach; ?>
-                <a class="btn btn-default" href="index.php?route=userList&page=<?= ($_GET['page'])-1?>">Previous Page</a>
-                <a class="btn btn-default" href="index.php?route=userList&page=<?= ($_GET['page'])+1?>">Next Page</a>
-
+                <a class="btn btn-default" href="index.php?route=userList&page=<?php if($page <= 1){echo $page;}else {echo $page-1;}?>">Previous Page</a>
+                <a class="btn btn-default" href="index.php?route=userList&page=<?php if($page >= $maxPages){echo $maxPages;}else {echo $page+1;}?>">Next Page</a>
+                <a class="btn btn-default<?php if ($page==1)echo ' active'?>" href="index.php?route=userList&page=1">1</a><span><?php if ($page > 3) echo '...' ?></span>
+                <a class="btn btn-default<?php if ($page<3)echo ' hidden'?>" href="index.php?route=userList&page=<?=$page-1?>"><?=$page-1?></a>
+                <a class="btn btn-default <?php if ($page>1)echo 'active'?>" href="index.php?route=userList&page=<?php if ($page==1)echo $page+1;else echo $page?>"><?php if ($page==1)echo $page+1;else echo $page?></a>
+                <a class="btn btn-default" href="index.php?route=userList&page=<?php if ($page == 1)echo $page+2;else echo $page+1;?>"><?php if ($page == 1)echo $page+2;else echo $page+1;?></a><span><?php if ($page<$maxPages)echo '...'?></span>
+                <a class="btn btn-default" href="index.php?route=userList&page=<?=$maxPages?>"><?=$maxPages?></a>
 
     </table>
     <form class="" action="index.php?route=userListForm" method="">
