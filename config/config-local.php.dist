@@ -1,0 +1,8 @@
+<?php
+return [
+      'baseUrl' => 'http://127.0.0.1/edsa-kurs/index.php?route=',
+        'db' => [
+        'user' => 'root',
+        'password' => '',
+        'name' => 'skolica',]
+];

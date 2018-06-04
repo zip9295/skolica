@@ -1,32 +1,17 @@
 <?php
-     $message = '';
-     include('route.php');
-     include('functions.php');
-     $config = include ('config.php') ;
-     $pdo = bootstrap();
-     include ('header.phtml') ;
+$message = '';
+include('route.php');
+include('functions.php');
+$config = include('config/config.php');
+$config = array_merge(
+    $config, include('config/config-local.php')
+);
+$pdo = bootstrap();
+include('header.phtml');
 
-     try {
-          resolveRoute($config);
-     } catch (\Exception $e) {
+try {
+    resolveRoute($config);
+} catch (\Exception $e) {
 
-     }
-
-
-
-     // try {
-     //      if (validateParams($_POST)) {
-     //           registerUser($_POST);
-     //           echo "OK";
-     //      }
-     //      else {
-     //           include('loginForm.phtml');
-     //      }
-     //
-     // } catch (Exception $e) {
-     //      echo $e -> getMessage();
-     //      die();
-     // }
-
-
- ?>
+}
+?>
