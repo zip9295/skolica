@@ -2,7 +2,7 @@
 namespace Repository;
 use \Mapper\MapperInterface;
 
-class User implements RepositoryInterface
+class Category implements RepositoryInterface
 {
     private $mapper;
 
@@ -10,7 +10,7 @@ class User implements RepositoryInterface
      * User constructor.
      * @param $mapper
      */
-    public function __construct(MapperInterface $mapper, UserService $userService)
+    public function __construct(MapperInterface $mapper)
     {
         $this->mapper = $mapper;
     }
@@ -20,7 +20,6 @@ class User implements RepositoryInterface
      */
     public function create($data)
     {
-        $data['pasword'] = $this->UserService->hashPassword($data['password']);
         $this->mapper->create($data);
     }
 

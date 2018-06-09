@@ -1,8 +1,7 @@
 <?php
 namespace Mapper;
-class User implements MapperInterface
-    {
-
+class Category implements MapperInterface
+{
     /**
      * @var \PDO
      */
@@ -24,9 +23,10 @@ class User implements MapperInterface
      */
     public function create($data)
     {
-        $sql = "INSERT INTO `user`(userId, firstName, lastName, email, password, username, age, status)
-                VALUES (NULL , {$data['firstName']}, {$data['lastName']}, {$data['email']}
-                {$data['password']}, {$data['username']},{$data['age']},{$data['status']})";
+        $sql = "INSERT INTO `category`(categoryId, categoryName, title, description, body, parentCategory, username, 
+                                       createdAt, updatedAt)
+                VALUES (NULL , {$data['categoryName']}, {$data['title']}, {$data['body']}, {$data['parentCategory']}
+                        {$data['username']}, {$data['createdAt']},{$data['updatedAt']})";
         if (!$this->driver->exec($sql)) {
             var_dump($this->driver->errorInfo()[2]);
             die();
@@ -38,11 +38,10 @@ class User implements MapperInterface
     /**
      * @param $params
      * @throws \Exception
-     * @return array
      */
     public function fetchList($params)
     {
-        $sql = "SELECT * FROM `user`";
+        $sql = "SELECT * FROM `category`";
         $statement = $this->driver->query($sql);
         if (!$statement){
             var_dump($this->driver->errorInfo()[2]);
@@ -54,24 +53,23 @@ class User implements MapperInterface
 
     /**
      * @param $id
-     * @throws \Exception
      * @return array
+     * @throws \Exception
      */
     public function fetchById($id)
     {
-        $sql = "SELECT * FROM `user` WHERE `userId`= $id";
+        $sql = "SELECT * FROM `category` WHERE `categoryId`= $id";
         $statement = $this->driver->query($sql);
         if (!$statement){
             var_dump($this->driver->errorInfo()[2]);
             die();
             throw new \Exception($this->driver->errorInfo()[2]);
         }
-        $user = $statement->fetch();
-        if (!$user) {
-            throw new \Exception('Korisnik nije pronadjen u bazi');
+        $category = $statement->fetch();
+        if (!$category) {
+            throw new \Exception('Kategorija nije pronadjena u bazi');
         }
-        return $user;
-
+        return $category;
     }
 
     /**
@@ -81,15 +79,15 @@ class User implements MapperInterface
      */
     public function update($data)
     {
-        $sql = "UPDATE `user` SET 
-        `email` = '{$data['email']}',
-        `password`= '{$data['email']}',
-        `firstName`= '{$data['firstName']}',
-        `lastName`= '{$data['lastName']}',
+        $sql = "UPDATE `category` SET 
+        `categoryName` = '{$data['categoryName']}',
+        `title`= '{$data['title']}',
+        `description`= '{$data['description']}',
+        `body`= '{$data['body']}',
+        `parentCategory`= '{$data['parentCategory']}',
         `username`= '{$data['username']}',
-        `status`= '{$data['status']}',
-        `age`= '{$data['age']}'
-        WHERE `userId`='{$data['userId']}'";
+        `updatedAt`= '{$data['updatedAt']}'
+        WHERE `categoryId`='{$data['categoryId']}'";
         if (!$this->driver->exec($sql)) {
             var_dump($this->driver->errorInfo()[2]);
             die();
@@ -101,7 +99,6 @@ class User implements MapperInterface
     /**
      * @param $id
      * @throws \Exception
-     * @return boolean
      */
     public function deleteById($id)
     {
@@ -117,7 +114,6 @@ class User implements MapperInterface
             die();
             throw new \Exception($this->driver->errorInfo()[2]);
         }
-
     }
 
 }
