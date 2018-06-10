@@ -1,14 +1,14 @@
 <?php
 namespace Mapper;
-class Category implements MapperInterface
+class Article implements MapperInterface
 {
+
     /**
      * @var \PDO
      */
     private $driver;
-
     /**
-     * User constructor.
+     * Article constructor.
      * @param $pdo
      */
     public function __construct($pdo)
@@ -23,8 +23,8 @@ class Category implements MapperInterface
      */
     public function create($data)
     {
-        $sql = "INSERT INTO `category`(categoryId, categoryName, parentCategory)
-                VALUES (NULL , {$data['categoryName']},{$data['parentCategory']}";
+        $sql = "INSERT INTO `article`(articleId, title, description, body, category, username)
+                VALUES (NULL , {$data['title']}, {$data['description']}, {$data['body']},{$data['category']}, {$data['username']}";
         if (!$this->driver->exec($sql)) {
             var_dump($this->driver->errorInfo()[2]);
             die();
@@ -39,7 +39,7 @@ class Category implements MapperInterface
      */
     public function fetchList($params)
     {
-        $sql = "SELECT * FROM `category`";
+        $sql = "SELECT * FROM `article`";
         $statement = $this->driver->query($sql);
         if (!$statement){
             var_dump($this->driver->errorInfo()[2]);
@@ -56,18 +56,18 @@ class Category implements MapperInterface
      */
     public function fetchById($id)
     {
-        $sql = "SELECT * FROM `category` WHERE `categoryId`= $id";
+        $sql = "SELECT * FROM `article` WHERE `articleId`= $id";
         $statement = $this->driver->query($sql);
         if (!$statement){
             var_dump($this->driver->errorInfo()[2]);
             die();
             throw new \Exception($this->driver->errorInfo()[2]);
         }
-        $category = $statement->fetch();
-        if (!$category) {
-            throw new \Exception('Kategorija nije pronadjena u bazi');
+        $article = $statement->fetch();
+        if (!$article) {
+            throw new \Exception('Artikal nije pronadjen u bazi');
         }
-        return $category;
+        return $article;
     }
 
     /**
@@ -77,10 +77,13 @@ class Category implements MapperInterface
      */
     public function update($data)
     {
-        $sql = "UPDATE `category` SET 
-        `categoryName` = '{$data['categoryName']}',
-        `parentCategory`= '{$data['parentCategory']}'
-        WHERE `categoryId`='{$data['categoryId']}'";
+        $sql = "UPDATE `article` SET 
+        `title` = '{$data['title']}',
+        `description`= '{$data['description']}',
+        `body` = '{$data['body']}',
+        `category` = '{$data['category']}',
+        `username` = '{$data['username']}'
+        WHERE `articleId`='{$data['articleId']}'";
         if (!$this->driver->exec($sql)) {
             var_dump($this->driver->errorInfo()[2]);
             die();
@@ -95,7 +98,7 @@ class Category implements MapperInterface
      */
     public function deleteById($id)
     {
-        $sql = "DELETE * FROM `user` WHERE `userId`= $id";
+        $sql = "DELETE * FROM `article` WHERE `articleId`= $id";
         $statement = $this->driver->exec($sql);
         if (!$statement){
             var_dump($this->driver->errorInfo()[2]);

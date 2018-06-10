@@ -1,20 +1,34 @@
 <?php
 namespace Model;
-class Category
+class Article
 {
-    private $categoryId;
-    private $categoryName;
-    private $parentCategory;
+    private $articleId;
+    private $title;
+    private $description;
+    private $body;
+    private $category;
     private $username;
     private $createdAt;
     private $updatedAt;
 
-    public function __construct($categoryId, $categoryName, $parentCategory, $username,
-                                $createdAt, $updatedAt)
+    /**
+     * Article constructor.
+     * @param $articleId
+     * @param $title
+     * @param $description
+     * @param $body
+     * @param $category
+     * @param $username
+     * @param $createdAt
+     * @param $updatedAt
+     */
+    public function __construct($articleId, $title, $description, $body, $category, $username, $createdAt, $updatedAt)
     {
-        $this->categoryId = $categoryId;
-        $this->categoryName = $categoryName;
-        $this->parentCategory = $parentCategory;
+        $this->articleId = $articleId;
+        $this->title = $title;
+        $this->description = $description;
+        $this->body = $body;
+        $this->category = $category;
         $this->username = $username;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
@@ -23,17 +37,9 @@ class Category
     /**
      * @return integer
      */
-    public function getCategoryId()
+    public function getArticleId()
     {
-        return $this->categoryId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->categoryName;
+        return $this->articleId;
     }
 
     /**
@@ -63,10 +69,14 @@ class Category
     /**
      * @return string
      */
-    public function getParentCategory()
+    public function getCategory()
     {
-        return $this->parentCategory;
+        return $this->category;
     }
+
+    /**
+     * @return string
+     */
     public function getUsername()
     {
         return $this->username;
@@ -87,4 +97,6 @@ class Category
     {
         return $this->updatedAt;
     }
+
+
 }
