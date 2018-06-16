@@ -7,7 +7,7 @@ return [
     'user/form' => ['user' => 'form'],
     'user/create' => ['user' => 'create'], 
     'user/update' => ['user' => 'update'],
-    'user/list' => ['user' => 'list'],
+    'user/getList' => ['\\Controller\\UserController' => 'getList'],
     'article/form' => ['article' => 'form'],
     'article/create' => ['article' => 'create'],
     'article/update' => ['article' => 'update'],

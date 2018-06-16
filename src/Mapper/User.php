@@ -42,14 +42,14 @@ class User implements MapperInterface
      */
     public function fetchList($params)
     {
-        $sql = "SELECT * FROM `user`";
+        $sql = "SELECT * FROM `user` LIMIT 100";
         $statement = $this->driver->query($sql);
         if (!$statement){
             var_dump($this->driver->errorInfo()[2]);
             die();
             throw new \Exception($this->driver->errorInfo()[2]);
         }
-        $statement->fetchAll();
+        return $statement->fetchAll();
     }
 
     /**

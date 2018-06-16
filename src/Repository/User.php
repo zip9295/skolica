@@ -1,6 +1,7 @@
 <?php
 namespace Repository;
 use \Mapper\MapperInterface;
+use \Service\UserService;
 
 class User implements RepositoryInterface
 {
@@ -27,9 +28,9 @@ class User implements RepositoryInterface
     /**
      * @param $params
      */
-    public function getList($params)
+    public function getList($params = [])
     {
-        $this->mapper->fetchList($params);
+        return $this->mapper->fetchList($params);
     }
 
     /**

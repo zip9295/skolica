@@ -10,6 +10,7 @@ function resolveRoute($config)
     switch ($route) {
         case 'loginForm':
             include('loginForm.phtml');
+
             break;
 
         case 'login':
