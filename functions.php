@@ -11,7 +11,7 @@ function connectToMysql()
 {
     $dsn = 'mysql:host=localhost;dbname=skolica';
     $username = 'root';
-    $password = '';
+    $password = 'rootpass';
     $pdo = new PDO($dsn, $username, $password);
     return $pdo;
 }
