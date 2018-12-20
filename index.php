@@ -1,6 +1,6 @@
 <?php
 $message = '';
-$config = include('config/config.php');
+$config = include('config/config-local.php');
 $config = array_merge(
     $config, include('config/config-local.php')
 );
