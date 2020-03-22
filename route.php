@@ -1,10 +1,10 @@
 <?php
         function resolveRoute($config){
             global $message;
-            if(!isset($_GET['route'])){
-               $route = 'home';
-            } else {
-               $route = $_GET['route'];
+
+            $route = 'userList';
+            if(isset($_GET['route']) && strlen($_GET['route']) > 0) {
+                $route = $_GET['route'];
             }
 
             switch ($route) {
@@ -31,7 +31,7 @@
 
                     break;
                 case 'userList':
-                    if (isset($_GET['message']) && $_GET['message'] === 'logedIn') {
+                    if (isset($_GET['message']) && $_GET['message'] === 'loggedIn') {
                         $message = 'Uspesno ste se ulogovali';
                     }
                     $users = array();
@@ -123,10 +123,8 @@
                     }
                     break;
                 default:
-                    echo "default";
+                    echo "Dobrodosli na nash blog";
                     break;
             }
-
-
      }
  ?>
