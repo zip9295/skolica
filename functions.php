@@ -18,12 +18,11 @@ function validateRegisterForm($params)
     }
 }
 
-function validateUserForm($params)
+function validateUserForm(array $params)
 {
-    if (!is_array($params)) {
-        throw new Exception('Given param is not an array');
-    }
-    if (isset($params['email']) and isset($params['password']) and isset($params['password-2']) and isset($params['firstName']) and isset($params['lastName']) and isset($params['username'])) {
+    if (isset($params['email']) and isset($params['password']) and
+        isset($params['password-2']) and isset($params['firstName']) and
+        isset($params['lastName']) and isset($params['username'])) {
         if (
             (strlen($params['email']) > 6 and strlen($params['email'] <= 20) and strstr($params['email'], '@', true)) and
             (strlen($params['password']) > 6 and strlen($params['password']) <= 14) and
@@ -50,14 +49,13 @@ function validateUserForm($params)
 
 function saveUser($params)
 {
-    $fileName = saveImage();
     $userData = [
         'email' => $params['email'],
         'password' => createPasswordHash($params['password']),
         'firstName' => $params['firstName'],
         'lastName' => $params['lastName'],
         'username' => $params['username'],
-        'image' => $fileName,
+        'image' => saveImage(),
         'status' => $params['status']
     ];
     $tmp = file_get_contents('storage.json');
@@ -67,6 +65,7 @@ function saveUser($params)
         $data = json_decode($tmp);
         $data[] = $userData;
     }
+
     return file_put_contents('storage.json', json_encode($data));
 }
 
@@ -74,8 +73,7 @@ function saveImage()
 {
     $fileName = APP_PATH . '/images/' . $_FILES['image']['name'];
     if (!move_uploaded_file($_FILES['image']['tmp_name'], $fileName)) {
-        echo "Nismo snimili sliku";
-        die();
+        throw new \Exception("Nismo snimili sliku");
     }
     return 'images/' . $_FILES['image']['name'];
 }
@@ -111,11 +109,8 @@ function login($email, $password)
     return false;
 }
 
-function validateLoginForm($params)
+function validateLoginForm(array $params)
 {
-    if (!is_array($params)) {
-        throw new Exception('Given param is not an array');
-    }
     if (isset($params['email']) and isset($params['password'])) {
         if ((strlen($params['email']) > 6 and strlen($params['email'] <= 20) and strstr($params['email'], '@', true)) and
             (strlen($params['password']) > 6 and strlen($params['password']) <= 14)
@@ -134,7 +129,7 @@ function bootstrap()
     define('APP_PATH', __DIR__);
     session_start();
     error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+    ini_set('display_errors', '1');
 }
 
 /*
@@ -158,7 +153,7 @@ function isLoggedIn()
 
 function redirect($baseUrl, $route = '', $statusCode = 302)
 {
-    header('location:' . $baseUrl . $route, $statusCode);
+    header('Location: ' . $baseUrl . $route, $statusCode);
 }
 
 function logOut()

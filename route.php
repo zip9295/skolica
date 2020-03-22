@@ -34,7 +34,7 @@
                     if (isset($_GET['message']) && $_GET['message'] === 'loggedIn') {
                         $message = 'Uspesno ste se ulogovali';
                     }
-                    $users = array();
+                    $users = [];
                     $emailFilter = null;
                     if (isset($_GET['emailFilter'])) {
                         array_push($users, getUserByEmail($_GET['emailFilter']));
@@ -45,12 +45,13 @@
                     break;
                 case 'userCreate':
                     $valid = validateUserForm($_POST);
+
                     if (!$valid) {
-                        global $message;
-                        $message = $valid;
+//                        global $message;
+                        echo $valid;
                     } else {
                         if (!saveUser($_POST)) {
-                            $message = 'Doslo je do greske prilikom snimanja korisnika';
+                            echo 'Doslo je do greske prilikom snimanja korisnika';
                         } else {
                             echo "Korisnik je uspesno sacuvan";
                         }
@@ -74,7 +75,6 @@
 
                     break;
                 case 'articleCreateForm' :
-                    $categories= array();
                     $categories= getCategory();
                     include('articleForm.phtml');
 
@@ -101,7 +101,7 @@
                     $articles = array();
                     $articleFilter = null;
                     if (isset($_GET['articleFilter'])) {
-                        array_push($article, getArticleByTitle($_GET['articleFilter']));
+                        array_push($articles, getArticleByTitle($_GET['articleFilter']));
                     } else {
                         $articles = getArticles();
                     }
