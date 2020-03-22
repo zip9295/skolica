@@ -3,23 +3,24 @@
             global $message;
             if(!isset($_GET['route'])){
                $route = 'home';
-            }else {
+            } else {
                $route = $_GET['route'];
             }
 
             switch ($route) {
                 case 'loginForm':
+                    if (isset($_GET['message'])) {
+                        $message = $_GET['message'];
+                    }
                     include('loginForm.phtml');
                     break;
 
                 case 'login':
                     if (validateLoginForm($_POST) and login($_POST['email'], $_POST['password'])) {
                         redirect($config['baseUrl'], '&message=loggedIn');
-
-                    } else {
-                        echo "Nisu dobri parametri";
-                        include('loginForm.phtml');
+                        exit();
                     }
+                    redirect($config['baseUrl'], 'loginForm&message=invalidParams');
                     break;
 
                 case 'registerForm':
