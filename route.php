@@ -51,14 +51,11 @@
 //                        global $message;
                         echo $valid;
                     } else {
-                        if (!saveUser($_POST)) {
-                            echo 'Doslo je do greske prilikom snimanja korisnika';
-                        } else {
-                            echo "Korisnik je uspesno sacuvan";
-                        }
-                    }
+                        saveUser($_POST);
 
+                    }
                     redirect($config['baseUrl'] . "userList");
+
                     break;
                 case 'userCreateForm':
                     include('templates/user/userForm.phtml');

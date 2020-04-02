@@ -32,6 +32,13 @@ function redirect($baseUrl, $route = '', $statusCode = 302)
     header('Location: ' . $baseUrl . $route, $statusCode);
 }
 
+function errorLog($e) {
+    $fileName = "errors.log";
+    $oldContent = file_get_contents($fileName);
+    $content = $oldContent.PHP_EOL . "[".date("Y-m-d H:i")."]" . $e->getMessage() . ", " . $e->getFile() . "line: " . $e->getLine() .PHP_EOL;
+    file_put_contents($fileName,$content);
+}
+
 
 
 

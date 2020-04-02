@@ -11,17 +11,16 @@ function isLoggedIn()
 
 function registerUser($params)
 {
-    $data = file_get_contents('storage.json');
+    $data = getUsersJsonDataRaw();
     $data .= json_encode(['email' => $params['email'], 'password' => $params['password']]) . PHP_EOL;
-    file_put_contents('storage.json', $data);
+    saveUsersJsonDataRaw($data);
 }
 
 function saveUser($params)
 {
-   $data = getUsersJsonData();
+   $data = getUsersJsonDataDecoded();
 
-    $lastItem = end($data);
-    $lastItemId = $lastItem["id"];
+    $lastItemId = getLastUserID($data);
     $userData = [
         "id" => ++$lastItemId,
         'email' => $params['email'],
@@ -32,7 +31,7 @@ function saveUser($params)
         'image' => saveImage(),
         'status' => $params['status']
     ];
-    $tmp = file_get_contents('storage.json');
+    $tmp = getUsersJsonDataRaw();
     if (strlen($tmp) === 0) {
         $data = [$userData];
     } else {
@@ -40,11 +39,11 @@ function saveUser($params)
         $data[] = $userData;
     }
 
-    saveUsersJsonData($data);
+    saveUsersJsonDataEncode($data);
 }
 
 function deleteUser() {
-    $data = getUsersJsonData();
+    $data = getUsersJsonDataDecoded();
     $arrIndex = array();
     foreach($data as $key => $value) {
         if ($key == $_GET["userId"]) {
@@ -55,33 +54,16 @@ function deleteUser() {
         unset($data[$i]);
     }
     $data = array_values($data);
-    saveUsersJsonData($data);
+    saveUsersJsonDataEncode($data);
 }
 
 
 function updateUser() {
-    $data = getUsersJsonData();
+    $data = getUsersJsonDataDecoded();
     $image = saveImage();
-    foreach ($data as $key =>$value) {
-     if ($value["id"] == $_POST["id"]) {
-        if ($_POST["password"] == "") {
-            $data[$key]["password"] = $data[$key]["password"];
-        }
-        else {
-            $data[$key]["password"] = md5($_POST["password"]);
-        }     
-         $data[$key]["username"] = $_POST["username"];
-         $data[$key]["email"] = $_POST["email"];
-         $data[$key]["firstName"] = $_POST["firstName"];
-         $data[$key]["lastName"] = $_POST["lastName"];
-         $data[$key]["status"] = $_POST["status"];
-         if ($_FILES["image"]["error"] === 0) {
-             $data[$key]["image"] = $image;
-         }         
-     }
-    }
-    $data = array_values($data);
-    saveUsersJsonData($data);
+    $dataX = mapUpdatedUser($data,$image);
+    $dataNew = array_values($dataX);
+    saveUsersJsonDataEncode($dataNew);
 }
 
 function createPasswordHash($password)
@@ -91,7 +73,7 @@ function createPasswordHash($password)
 
 function getUsers()
 {
-    $users = file_get_contents('storage.json');
+    $users = getUsersJsonDataRaw();
     return json_decode($users);
 }
 
@@ -106,6 +88,13 @@ function getUserByEmail($email)
 
     return false;
 }
+
+function getLastUserID($data) {
+    $lastItem = end($data);
+    $lastItemId = $lastItem["id"];
+    return $lastItemId;
+}
+
 
 
 function login($email, $password)
@@ -127,3 +116,24 @@ function logOut()
     session_destroy();
 }
 
+function mapUpdatedUser($data,$image) {
+     foreach ($data as $key =>$value) {
+     if ($value["id"] == $_POST["id"]) {
+        if ($_POST["password"] == "") {
+            $data[$key]["password"] = $data[$key]["password"];
+        }
+        else {
+            $data[$key]["password"] = md5($_POST["password"]);
+        }     
+         $data[$key]["username"] = $_POST["username"];
+         $data[$key]["email"] = $_POST["email"];
+         $data[$key]["firstName"] = $_POST["firstName"];
+         $data[$key]["lastName"] = $_POST["lastName"];
+         $data[$key]["status"] = $_POST["status"];
+         if ($_FILES["image"]["error"] === 0) {
+             $data[$key]["image"] = $image;
+         }         
+     }
+    }
+    return $data;
+}

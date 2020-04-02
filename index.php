@@ -1,4 +1,6 @@
 <?php
+
+
      $message = '';
      include('route.php');
      include('functions.php');
@@ -9,8 +11,9 @@
      try {
           resolveRoute($config);
      } catch (\Exception $e) {
-
      }
+
+
 
 
 

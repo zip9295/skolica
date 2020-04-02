@@ -40,7 +40,7 @@ function validateUserForm(array $params)
         ) {
             return true;
         } else {
-            echo "nije ok";
+            throw new Exception("Params are not ok");
             return false;
         }
     } else {
