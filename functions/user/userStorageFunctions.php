@@ -3,18 +3,7 @@
 
 
 function getUsersJsonDataRaw() {
-	$UsersJson = file_get_contents("storage.json");
-	$cachedUsersJson = file_get_contents("cached.json");
-	if (file_exists("cached.json") && strlen($cachedUsersJson) > 0) {
-		$file = $cachedUsersJson;
-	}
-	elseif (file_exists("cached.json") && strlen($cachedUsersJson) == 0) {
-		file_put_contents("cached.json",$UsersJson);
-		$file = $UsersJson;
-	}
-	else {
-	$file = $UsersJson;
-}
+	$file = file_get_contents("storage.json");
 	return $file;
 }
 
